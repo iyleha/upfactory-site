@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Скачать UpFactory — учёт производства для Android</title>
+<meta name="description" content="UpFactory — приложение для учёта производства: заказы, сдельная зарплата и склад. Скачать APK для Android.">
+<link rel="icon" href="../assets/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+<style>
+  :root{
+    /* M3 light scheme — те же токены, что в приложении */
+    --surface-container:#F3EDF7;
+    --surface-container-high:#ECE6F0;
+    --on-primary:#FFFFFF;
+    --on-surface:#1D1B20;
+    --on-surface-variant:#49454F;
+    --on-secondary-container:#4A4459;
+    --secondary:#625B71;
+    --outline:#79747E;
+    --outline-variant:#CAC4D0;
+    --primary:#6750A4;
+    --error-08:rgba(179,38,30,0.08);
+
+    --page-px:120px;   /* поля страницы на большом экране */
+    --content-w:550px; /* ширина колонки контента по макету */
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--surface-container);
+    color:var(--on-surface);
+    font-family:Roboto,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    font-size:14px;
+    line-height:20px;
+    letter-spacing:.25px;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+  img{display:block;max-width:100%}
+  p{margin:0}
+  a{color:var(--primary)}
+
+  /* ---------- Шапка ---------- */
+  .header{
+    background:var(--on-primary);
+    height:68px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    padding:0 var(--page-px);
+    flex:0 0 auto;
+  }
+  .header__logo{width:160px;height:29px;flex:0 0 auto}
+  .header__center{
+    flex:1 1 0;
+    min-width:0;
+    display:flex;
+    justify-content:center;
+    color:var(--on-secondary-container);
+    text-align:center;
+    white-space:nowrap;
+  }
+  .header__contacts{display:flex;align-items:center;gap:20px;flex:0 0 auto;margin-left:auto}
+  .header__contacts-label{color:var(--secondary);white-space:nowrap}
+  .messengers{display:flex;align-items:center;gap:8px}
+  .messenger{display:block;width:28px;height:28px;border-radius:9px;transition:opacity .15s ease}
+  .messenger:hover,.messenger:focus-visible{opacity:.75}
+  .messenger img{width:28px;height:28px}
+
+  /* ---------- Основная колонка ---------- */
+  .main{
+    flex:1 0 auto;
+    padding:40px var(--page-px) 80px;
+    display:flex;
+    justify-content:center;
+  }
+  .content{
+    width:100%;
+    max-width:var(--content-w);
+    display:flex;
+    flex-direction:column;
+    gap:40px;
+  }
+
+  .title-row{display:flex;align-items:center;gap:20px}
+  .title-row__icon{width:58px;height:58px;flex:0 0 auto}
+  .title-row__name{
+    font-size:32px;
+    line-height:40px;
+    font-weight:500;
+    letter-spacing:0;
+    white-space:nowrap;
+  }
+  .title-row__note{
+    flex:1 1 0;
+    min-width:0;
+    text-align:right;
+    color:var(--outline);
+  }
+
+  .stack{display:flex;flex-direction:column;gap:24px}
+
+  /* ---------- Карточка ---------- */
+  .card{
+    background:var(--on-primary);
+    border-radius:16px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .card__head{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:16px;
+    line-height:24px;
+    font-weight:500;
+    letter-spacing:.5px;
+  }
+  .card__head--divider{
+    padding-bottom:12px;
+    border-bottom:1px solid var(--surface-container-high);
+  }
+  .card__head img{width:20px;height:20px;flex:0 0 auto}
+
+  /* ---------- Таблица версии ---------- */
+  .table{
+    display:flex;
+    flex-direction:column;
+    border-radius:8px 8px 0 0;
+    overflow:hidden;
+  }
+  .table__row{display:flex;align-items:center}
+  .table__row + .table__row{border-top:1px solid var(--surface-container-high)}
+  .table__cell{flex:1 1 0;min-width:0;padding:6px 8px}
+  .table__cell--size{flex:0 0 80px}
+  .table__row--head .table__cell{color:var(--outline)}
+  .table__cell--muted{color:var(--outline)}
+
+  /* ---------- Список установки ---------- */
+  .steps{margin:0;padding-left:21px}
+  .steps li + li{margin-top:12px}
+
+  /* ---------- Кнопка ---------- */
+  .button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    height:40px;
+    padding:0 16px;
+    border-radius:12px;
+    background:var(--primary);
+    color:var(--on-primary);
+    font-size:14px;
+    line-height:20px;
+    font-weight:500;
+    letter-spacing:.1px;
+    text-decoration:none;
+    align-self:flex-start;
+    transition:filter .15s ease;
+  }
+  .button:hover,.button:focus-visible{filter:brightness(1.1)}
+  .button img{width:20px;height:20px}
+
+  /* ---------- Плашка-сообщение ---------- */
+  .message{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    padding:12px;
+    border-radius:10px;
+    background:var(--error-08);
+    font-size:12px;
+    line-height:16px;
+    letter-spacing:.4px;
+  }
+  .message img{width:16px;height:16px;flex:0 0 auto;margin-top:0}
+
+  /* ---------- Текстовые блоки ---------- */
+  .prose > *:not(:first-child){margin-top:12px}
+  .prose strong{font-weight:500}
+  .prose h3{
+    margin:0;
+    font-size:14px;
+    line-height:20px;
+    font-weight:500;
+    letter-spacing:.25px;
+  }
+  .prose ul{margin:0;padding-left:21px}
+
+  /* ---------- Ссылка на другие версии ---------- */
+  .versions{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    padding:0 16px 40px;
+  }
+  .versions__link{
+    display:inline-flex;
+    align-items:center;
+    gap:2px;
+    color:var(--primary);
+    text-decoration:none;
+  }
+  .versions__link:hover,.versions__link:focus-visible{text-decoration:underline}
+  .versions__link img{width:20px;height:20px}
+
+  /* ---------- Подвал ---------- */
+  .footer{
+    flex:0 0 auto;
+    background:var(--outline-variant);
+    min-height:120px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    padding:24px var(--page-px);
+    color:var(--on-secondary-container);
+  }
+  .footer__mark{width:44px;height:44px;flex:0 0 auto}
+  .footer__name{white-space:nowrap}
+  .footer__name strong{font-weight:500}
+  .footer__copy{flex:1 1 0;min-width:0;text-align:right}
+
+  /* ---------- Адаптив ---------- */
+  @media (max-width:1100px){
+    :root{--page-px:40px}
+  }
+  @media (max-width:760px){
+    :root{--page-px:16px}
+    .header{gap:12px}
+    .header__center{display:none}
+    .header__contacts-label{display:none}
+    .header__logo{width:132px;height:24px}
+    .main{padding-top:32px;padding-bottom:48px}
+    .content{gap:32px}
+    .title-row{flex-wrap:wrap;gap:12px}
+    .title-row__icon{width:48px;height:48px}
+    .title-row__name{font-size:28px;line-height:36px}
+    .title-row__note{flex-basis:100%;text-align:left}
+    .table__cell--size{flex:0 0 68px}
+    .button{width:100%;align-self:stretch}
+    .versions{padding:0 4px 16px}
+    .footer{flex-wrap:wrap;gap:16px;padding:24px 16px}
+    .footer__copy{flex-basis:100%;text-align:left}
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <img class="header__logo" src="../assets/logo-wordmark.svg" alt="UpFactory" width="160" height="29">
+  <div class="header__center">Скачать приложение</div>
+  <div class="header__contacts">
+    <span class="header__contacts-label">Контакты:</span>
+    <div class="messengers">
+      <a class="messenger" href="https://t.me/loginweb" target="_blank" rel="noopener" aria-label="Написать в Telegram">
+        <img src="../assets/telegram.svg" alt="Telegram" width="28" height="28">
+      </a>
+      <a class="messenger" href="https://wa.me/79081901620" target="_blank" rel="noopener" aria-label="Написать в WhatsApp">
+        <img src="../assets/whatsapp.svg" alt="WhatsApp" width="28" height="28">
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="content">
+
+    <div class="title-row">
+      <img class="title-row__icon" src="../assets/app-icon.svg" alt="" width="58" height="58">
+      <h1 class="title-row__name">UpFactory</h1>
+      <div class="title-row__note">приложение для Android</div>
+    </div>
+
+    <div class="stack">
+
+      <!-- Актуальная версия -->
+      <section class="card">
+        <div class="card__head">
+          Актуальная версия
+          <img src="../assets/check.svg" alt="" width="20" height="20">
+        </div>
+        <div class="table">
+          <div class="table__row table__row--head">
+            <div class="table__cell">Версия приложения</div>
+            <div class="table__cell">Дата обновления</div>
+            <div class="table__cell table__cell--size">Размер</div>
+          </div>
+          <div class="table__row">
+            <div class="table__cell table__cell--muted">1.0.0</div>
+            <div class="table__cell">20 сентября 2026</div>
+            <div class="table__cell table__cell--size">68 МБ</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Установка -->
+      <section class="card">
+        <div class="card__head card__head--divider">Установка приложения</div>
+        <ol class="steps">
+          <li>Скачайте файл UpFactory.apk по кнопке ниже (версия актуальная)</li>
+          <li>Откройте скачанный файл. Android спросит разрешение устанавливать приложения из этого источника. Разрешите — этот вопрос телефон задаёт по любому приложению не из Play Маркета.</li>
+        </ol>
+        <a class="button" href="https://github.com/iyleha/upfactory-site/releases/latest/download/UpFactory.apk">
+          <img src="../assets/download.svg" alt="" width="20" height="20">
+          Скачать
+        </a>
+        <div class="message">
+          <img src="../assets/info.svg" alt="" width="16" height="16">
+          <p>Если телефон покажет предупреждение о неизвестном разработчике — это нормально: UpFactory не публикуется в Play Маркете, мы раздаём приложение напрямую.</p>
+        </div>
+      </section>
+
+      <div class="versions">
+        <span>Нужна другая версия UpFactory?</span>
+        <a class="versions__link" href="https://github.com/iyleha/upfactory-site/releases" target="_blank" rel="noopener">
+          <img src="../assets/chevron-down.svg" alt="" width="20" height="20">
+          Посмотреть все доступные версии
+        </a>
+      </div>
+
+      <!-- Первый вход -->
+      <section class="card">
+        <div class="card__head card__head--divider">Первый вход в кабинет работника</div>
+        <div class="message">
+          <img src="../assets/info.svg" alt="" width="16" height="16">
+          <p>Нужно приглашение от руководителя, чтобы войти в систему</p>
+        </div>
+        <div class="prose">
+          <p><strong>UpFactory</strong> — рабочее приложение вашего производства, и войти в него может только тот, кого добавил руководитель. Скачать приложение может кто угодно, но без приглашения внутри ничего не будет.</p>
+          <p>Доступ выдаёт руководитель: он создаёт приглашение в систему по вашей почте — она понадобится для входа в приложение.</p>
+          <p>Для первого входа нажмите «<strong>У меня есть приглашение</strong>» на экране авторизации. Затем следуйте указаниям на экране.</p>
+        </div>
+        <div class="message">
+          <img src="../assets/info.svg" alt="" width="16" height="16">
+          <p>Если приложение отвечает, что приглашения нет, — руководитель либо ещё не добавил вас, либо ошибся в адресе. Это решается только через него.</p>
+        </div>
+      </section>
+
+      <!-- О продукте -->
+      <section class="card">
+        <div class="card__head card__head--divider">О продукте</div>
+        <div class="prose">
+          <h3>UpFactory — Производство в телефоне</h3>
+          <p>Заказы, сдельная зарплата и склад — без тетрадей, таблиц и вечерних сверок.</p>
+
+          <h3>Руководителю — меньше рутины</h3>
+          <p>Видно, что происходит в цехе, прямо сейчас: какой заказ на какой стадии, кто что сделал, сколько материала ушло. Не нужно обходить участки, звонить и собирать цифры в конце недели.</p>
+          <p>Прогресс заказов, списание материалов и зарплата считаются сами. Управление с телефона — из цеха, из дома, из командировки.</p>
+
+          <h3>Работнику — понятные задачи и честный расчёт</h3>
+          <p>В приложении видно то, что подходит по специальности. Взять операцию в работу, отметить сделанное — и сразу видеть, сколько заработано.</p>
+          <p>Никаких споров в конце недели: сумма считается по тем же расценкам, что видит руководитель, и её видно в любой момент.</p>
+
+          <h3>Что внутри</h3>
+          <ul>
+            <li>Заказы и контроль выполнения</li>
+            <li>Расчёт сдельной зарплаты</li>
+            <li>Списание материалов по ходу изготовления</li>
+            <li>Склад изделий и материалов</li>
+            <li>История заказов, работ и движения материалов</li>
+          </ul>
+
+          <h3>Гибкая система настройки</h3>
+          <p>Изделия, операции, специальности и материалы настраиваются под своё производство. Отличное решение для производства, у которого есть цикл операций и сдельная оплата труда.</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <img class="footer__mark" src="../assets/logo-mark.svg" alt="" width="44" height="44">
+  <div class="footer__name"><strong>UpFactory</strong> · Учёт производства</div>
+  <div class="footer__copy">© 2026 UpFactory.</div>
+</footer>
+
+</body>
+</html>
